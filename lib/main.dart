@@ -1,10 +1,16 @@
 import 'dart:io';
 
+import 'package:admin_panel/widgets/home_image_container.dart';
+import 'package:admin_panel/widgets/text_field_container.dart';
+import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gallery_picker/gallery_picker.dart';
+import 'package:gallery_picker/models/media_file.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main(List<String> args) {
-  runApp(AdminPanel());
+  runApp(const AdminPanel());
 }
 
 class AdminPanel extends StatefulWidget {
@@ -17,6 +23,11 @@ class AdminPanel extends StatefulWidget {
 class _AdminPanelState extends State<AdminPanel> {
   File? _image;
   final picker = ImagePicker();
+  List<MediaFile> _selectedImages = [];
+
+  final TextEditingController _tourNameController = TextEditingController();
+  final TextEditingController _questCountController = TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
 
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(
@@ -31,6 +42,8 @@ class _AdminPanelState extends State<AdminPanel> {
       }
     });
   }
+
+  Future getMoreImagesFromGallery() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -48,34 +61,107 @@ class _AdminPanelState extends State<AdminPanel> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Center(
-              child: InkWell(
-                onTap: () {
-                  getImageGallery();
-                },
-                child: Container(
-                  height: 200,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              
+              const Center(
+                child: Text(
+                  "Home Menu",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    backgroundColor: Colors.amber,
                   ),
-                  child: _image != null
-                      ? Image.file(
-                          _image!.absolute,
-                          fit: BoxFit.cover,
-                        )
-                      : Center(
-                          child: Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 60,
-                          ),
-                        ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        getImageGallery();
+                      },
+                      child: HomeImageContainer(image: _image),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        TextFieldContainer(
+                            tourNameController: _tourNameController),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFieldContainer(
+                            tourNameController: _questCountController),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFieldContainer(
+                            tourNameController: _totalPriceController),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Center(
+                child: Text(
+                  "Tour Detail Screen",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    backgroundColor: Colors.amber,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: AnotherCarousel(images: _selectedImages),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 70,
+                    height: 70,
+                    child: FloatingActionButton(
+                      child: Icon(Icons.add),
+                      onPressed: () async {
+                        List<MediaFile> _mediaFile =
+                            await GalleryPicker.pickMedia(
+                                    context: context, singleMedia: false) ??
+                                [];
+                        setState(() {
+                          _selectedImages = _mediaFile;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
