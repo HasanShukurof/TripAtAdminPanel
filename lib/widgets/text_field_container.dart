@@ -1,19 +1,22 @@
-
 import 'package:flutter/material.dart';
 
 class TextFieldContainer extends StatelessWidget {
   const TextFieldContainer({
     super.key,
-    required TextEditingController tourNameController,
-  }) : _tourNameController = tourNameController;
+    required this.controller,
+    required this.hintText,
+    this.minHeight = 50,
+  });
 
-  final TextEditingController _tourNameController;
+  final TextEditingController controller;
+  final String hintText;
+  final double minHeight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 50,
+      constraints: BoxConstraints(minHeight: minHeight),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.black,
@@ -23,12 +26,15 @@ class TextFieldContainer extends StatelessWidget {
         ),
       ),
       child: TextField(
-        controller: _tourNameController,
-        decoration: const InputDecoration(
-          hintText: 'Enter Tour Name',
-          hintStyle: TextStyle(color: Colors.grey),
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.grey),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         ),
       ),
     );

@@ -1,12 +1,9 @@
 import 'dart:io';
 
+import 'package:admin_panel/widgets/detail_images_container.dart';
 import 'package:admin_panel/widgets/home_image_container.dart';
 import 'package:admin_panel/widgets/text_field_container.dart';
-import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:gallery_picker/gallery_picker.dart';
-import 'package:gallery_picker/models/media_file.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main(List<String> args) {
@@ -23,11 +20,32 @@ class AdminPanel extends StatefulWidget {
 class _AdminPanelState extends State<AdminPanel> {
   File? _image;
   final picker = ImagePicker();
-  List<MediaFile> _selectedImages = [];
+  List<File> _images = [];
 
   final TextEditingController _tourNameController = TextEditingController();
   final TextEditingController _questCountController = TextEditingController();
   final TextEditingController _totalPriceController = TextEditingController();
+  final TextEditingController _aboutTourController = TextEditingController();
+  final TextEditingController _tittleNotificationController =
+      TextEditingController();
+  final TextEditingController _textNotificationController =
+      TextEditingController();
+
+  Future getImagesGallery() async {
+    final pickedFiles = await picker.pickMultiImage(
+      imageQuality: 80,
+    );
+    setState(
+      () {
+        if (pickedFiles.isNotEmpty) {
+          _images = pickedFiles.map((file) => File(file.path)).toList();
+          print("SHEKILLER: $_images");
+        } else {
+          print("Resim seçilmedi");
+        }
+      },
+    );
+  }
 
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(
@@ -42,8 +60,6 @@ class _AdminPanelState extends State<AdminPanel> {
       }
     });
   }
-
-  Future getMoreImagesFromGallery() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +83,7 @@ class _AdminPanelState extends State<AdminPanel> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
-              
+              const SizedBox(height: 10),
               const Center(
                 child: Text(
                   "Home Menu",
@@ -81,45 +94,42 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        getImageGallery();
-                      },
+                      onTap: getImageGallery,
                       child: HomeImageContainer(image: _image),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       children: [
                         TextFieldContainer(
-                            tourNameController: _tourNameController),
-                        const SizedBox(
-                          height: 10,
+                          controller: _tourNameController,
+                          hintText: "Enter Tour Name",
+                          minHeight: 50,
                         ),
+                        const SizedBox(height: 10),
                         TextFieldContainer(
-                            tourNameController: _questCountController),
-                        const SizedBox(
-                          height: 10,
+                          controller: _questCountController,
+                          hintText: "Enter Quest's Count",
+                          minHeight: 50,
                         ),
+                        const SizedBox(height: 10),
                         TextFieldContainer(
-                            tourNameController: _totalPriceController),
+                          controller: _totalPriceController,
+                          hintText: "Enter Total Price",
+                          minHeight: 50,
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               const Center(
                 child: Text(
                   "Tour Detail Screen",
@@ -130,35 +140,56 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              const SizedBox(height: 10),
+              Expanded(
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: DetailImagesContainer(images: _images),
+                          ),
+                          Expanded(
+                            child: TextFieldContainer(
+                              controller: _aboutTourController,
+                              hintText: "Edit Text About Tour",
+                              minHeight: 200,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: getImagesGallery,
+                      child: const Text('CHECK PHOTOS'),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: getImagesGallery,
+                      child: const Text('Send Home & Detail Fields to Backend'),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 200,
-                      width: double.infinity,
-                      child: AnotherCarousel(images: _selectedImages),
+              Flexible(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    TextFieldContainer(
+                        controller: _tittleNotificationController,
+                        hintText: "Enter Tittle Notification"),
+                    const SizedBox(height: 10),
+                    TextFieldContainer(
+                        controller: _textNotificationController,
+                        hintText: "Enter Text Notification"),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: getImagesGallery,
+                      child: const Text('Send Notification Field to Backend'),
                     ),
-                  ),
-                  SizedBox(
-                    width: 70,
-                    height: 70,
-                    child: FloatingActionButton(
-                      child: Icon(Icons.add),
-                      onPressed: () async {
-                        List<MediaFile> _mediaFile =
-                            await GalleryPicker.pickMedia(
-                                    context: context, singleMedia: false) ??
-                                [];
-                        setState(() {
-                          _selectedImages = _mediaFile;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
