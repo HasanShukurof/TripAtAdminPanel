@@ -166,7 +166,7 @@ class _AdminPanelState extends State<AdminPanel> {
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: getImagesGallery,
+                      onPressed: (){},
                       child: const Text('Send Home & Detail Fields to Backend'),
                     ),
                   ],
@@ -185,7 +185,7 @@ class _AdminPanelState extends State<AdminPanel> {
                         hintText: "Enter Text Notification"),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: getImagesGallery,
+                      onPressed: (){},
                       child: const Text('Send Notification Field to Backend'),
                     ),
                   ],
