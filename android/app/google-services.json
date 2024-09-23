@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "6196449018",
+      "project_id": "tripaz-travel-app",
+      "storage_bucket": "tripaz-travel-app.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:6196449018:android:ad7b3b8e5be7ed431ac343",
+          "android_client_info": {
+            "package_name": "com.hasanshukurov.san_travel"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyB9K9V7xLV8Dfwnd6xmydL_fw7uQzMpJWo"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

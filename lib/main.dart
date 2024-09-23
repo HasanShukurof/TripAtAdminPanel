@@ -1,12 +1,19 @@
 import 'dart:io';
 
+import 'package:admin_panel/firebase_options.dart';
 import 'package:admin_panel/widgets/detail_images_container.dart';
 import 'package:admin_panel/widgets/home_image_container.dart';
 import 'package:admin_panel/widgets/text_field_container.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-void main(List<String> args) {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const AdminPanel());
 }
 
@@ -59,6 +66,12 @@ class _AdminPanelState extends State<AdminPanel> {
         print("No Image Picked");
       }
     });
+  }
+
+  Future addFirestore() async {
+    final Map<String, dynamic> data = {'tourName': _tourNameController.text};
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('tourInfo').add(data);
   }
 
   @override
@@ -166,7 +179,11 @@ class _AdminPanelState extends State<AdminPanel> {
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {
+                        setState(() {
+                          addFirestore();
+                        });
+                      },
                       child: const Text('Send Home & Detail Fields to Backend'),
                     ),
                   ],
@@ -185,7 +202,7 @@ class _AdminPanelState extends State<AdminPanel> {
                         hintText: "Enter Text Notification"),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       child: const Text('Send Notification Field to Backend'),
                     ),
                   ],
