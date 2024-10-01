@@ -20,7 +20,7 @@ class HomeImageContainer extends StatelessWidget {
       ),
       child: _image != null
           ? Image.file(
-              _image!.absolute,
+              _image.absolute,
               fit: BoxFit.contain,
             )
           : const Center(child: Text("Home Page Image")),
